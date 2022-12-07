@@ -73,6 +73,13 @@ class LoginWidget extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: '请输入用户名',
                   hintStyle: TextStyle(fontSize: DimenSizeUtils.sp_15),
+                  suffixIcon: IconButton(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    icon: const Icon(Icons.clear,size: 15,),
+                    onPressed: (){
+                      acountController.clear();
+                    },
+                  )
                 ),
                 style: TextStyle(fontSize: DimenSizeUtils.sp_15),
                 onChanged: (text){
@@ -94,6 +101,7 @@ class LoginWidget extends StatelessWidget {
                 controller: passwordController,
                 clipBehavior: Clip.none,
                 decoration: InputDecoration(
+                  border: InputBorder.none,
                   hintText: '请输入密码',
                   hintStyle: TextStyle(fontSize: DimenSizeUtils.sp_15),
                 ),
@@ -117,6 +125,7 @@ class LoginWidget extends StatelessWidget {
                 controller: codeController,
                 clipBehavior: Clip.none,
                 decoration: InputDecoration(
+                    border: InputBorder.none,
                     hintText: '请输入验证码',
                     hintStyle: TextStyle(fontSize: DimenSizeUtils.sp_15)),
                 style: TextStyle(fontSize: DimenSizeUtils.sp_15),
