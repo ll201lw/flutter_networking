@@ -1,25 +1,40 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_networking/utils/color/ColorUtils.dart';
 import 'package:flutter_networking/utils/dimensize/DimenSizeUtils.dart';
 
 import '../main/my_main.dart';
 
-class LoginWidget extends StatelessWidget {
+class LoginWidget extends StatefulWidget {
   const LoginWidget({super.key});
 
   @override
+  LoginState build(BuildContext context) {
+
+    return LoginState();
+  }
+
+  @override
+  State<StatefulWidget> createState()=>LoginState();
+}
+
+class LoginState extends State<LoginWidget>{
+  final TextEditingController acountController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController codeController = TextEditingController();
+  var acountText = "";
+  var passwordText = "";
+  var codeText = "";
+  var showClearButton = false;
+  var showPassword = true;
+  var codeUrl = "";
+
+
+  @override
   Widget build(BuildContext context) {
-    final TextEditingController acountController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
-    final TextEditingController codeController = TextEditingController();
-    var acountText = "";
-    var passwordText = "";
-    var codeText = "";
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Form(
-        key: super.key,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: ListView(
           children: [
@@ -28,7 +43,7 @@ class LoginWidget extends StatelessWidget {
               children: [
                 Container(
                   margin:
-                      EdgeInsets.fromLTRB(DimenSizeUtils.dimenSize_30, 0, 0, 0),
+                  EdgeInsets.fromLTRB(DimenSizeUtils.dimenSize_30, 0, 0, 0),
                   child: Text('欢迎使用「',
                       style: TextStyle(
                           color: ColorUtils.black11,
@@ -71,19 +86,29 @@ class LoginWidget extends StatelessWidget {
                 controller: acountController,
                 clipBehavior: Clip.none,
                 decoration: InputDecoration(
-                  hintText: '请输入用户名',
-                  hintStyle: TextStyle(fontSize: DimenSizeUtils.sp_15),
-                  suffixIcon: IconButton(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    icon: const Icon(Icons.clear,size: 15,),
-                    onPressed: (){
-                      acountController.clear();
-                    },
-                  )
+                    hintText: '请输入用户名',
+                    hintStyle: TextStyle(fontSize: DimenSizeUtils.sp_15),
+                    suffixIcon: showClearButton?IconButton(
+                      padding: EdgeInsets.fromLTRB(
+                          DimenSizeUtils.dimenSize_5, 0, 0, DimenSizeUtils.dimenSize_13),
+                      icon:  Icon(
+                        Icons.cancel,
+                        size: DimenSizeUtils.dimenSize_15,
+                      ),
+                      onPressed: () {
+                        acountController.clear();
+                        showClearButton = acountController.text.isNotEmpty;
+                        setState(() {
+                        });
+                      },
+                    ):null
                 ),
                 style: TextStyle(fontSize: DimenSizeUtils.sp_15),
-                onChanged: (text){
+                onChanged: (text) {
                   acountText = text;
+                  showClearButton = acountController.text.isNotEmpty?true:false;
+                  setState(() {
+                  });
                 },
               ),
             ),
@@ -100,14 +125,28 @@ class LoginWidget extends StatelessWidget {
               child: TextField(
                 controller: passwordController,
                 clipBehavior: Clip.none,
+                obscureText: showPassword,
                 decoration: InputDecoration(
-                  border: InputBorder.none,
                   hintText: '请输入密码',
                   hintStyle: TextStyle(fontSize: DimenSizeUtils.sp_15),
+                  suffixIcon: IconButton(
+                    padding: EdgeInsets.fromLTRB(
+                        DimenSizeUtils.dimenSize_5, 0, 0, DimenSizeUtils.dimenSize_13),
+                    icon:  Icon(
+                      showPassword?Icons.visibility:Icons.visibility_off,
+                      size: DimenSizeUtils.dimenSize_15,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        showPassword = !showPassword;
+                      });
+                    },
+                  )
                 ),
                 style: TextStyle(fontSize: DimenSizeUtils.sp_15),
-                onChanged: (text){
+                onChanged: (text) {
                   passwordText = text;
+                  showPassword = passwordController.text.isNotEmpty?true:false;
                 },
               ),
             ),
@@ -125,11 +164,12 @@ class LoginWidget extends StatelessWidget {
                 controller: codeController,
                 clipBehavior: Clip.none,
                 decoration: InputDecoration(
-                    border: InputBorder.none,
                     hintText: '请输入验证码',
-                    hintStyle: TextStyle(fontSize: DimenSizeUtils.sp_15)),
+                    hintStyle: TextStyle(fontSize: DimenSizeUtils.sp_15),
+                  // icon: Image.network(codeUrl,fit: BoxFit.fill,),
+                ),
                 style: TextStyle(fontSize: DimenSizeUtils.sp_15),
-                onChanged: (text){
+                onChanged: (text) {
                   codeText = text;
                 },
               ),
@@ -140,7 +180,7 @@ class LoginWidget extends StatelessWidget {
                   DimenSizeUtils.dimenSize_49, DimenSizeUtils.dimenSize_30, 0),
               decoration: BoxDecoration(
                   borderRadius:
-                      BorderRadius.circular(DimenSizeUtils.dimenSize_8)),
+                  BorderRadius.circular(DimenSizeUtils.dimenSize_8)),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(primary: ColorUtils.green2f),
                 onPressed: () {
@@ -148,16 +188,16 @@ class LoginWidget extends StatelessWidget {
                   var password = acountController.value;
                   var code = acountController.value;
 
-                  if("" == acountText){
+                  if ("" == acountText) {
                     // Toast.showToast("请输入账号");
                     return;
                   }
 
-                  if("" == passwordText){
+                  if ("" == passwordText) {
                     // Toast.showToast("请输入密码");
                     return;
                   }
-                  if("" == codeText){
+                  if ("" == codeText) {
                     // Toast.showToast("请输入验证码");
                     return;
                   }
@@ -181,6 +221,7 @@ class LoginWidget extends StatelessWidget {
       ),
     );
   }
+
 }
 
 void pushMain(BuildContext context) {
