@@ -200,7 +200,40 @@ class LoginState extends State<LoginWidget>{
               decoration: BoxDecoration(
                   borderRadius:
                   BorderRadius.circular(DimenSizeUtils.dimenSize_8)),
-              child: loginButton(context, acountText, passwordText, codeText),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: ColorUtils.green2f),
+                onPressed: () {
+                  var acount = acountController.value;
+                  var password = acountController.value;
+                  var code = acountController.value;
+
+                  if ("" == acountText) {
+                    // Toast.showToast("请输入账号");
+                    return;
+                  }
+
+                  if ("" == passwordText) {
+                    // Toast.showToast("请输入密码");
+                    return;
+                  }
+                  if ("" == codeText) {
+                    // Toast.showToast("请输入验证码");
+                    return;
+                  }
+
+                  if (acount.text.isNotEmpty &&password.text.isNotEmpty &&code.text.isNotEmpty) {
+                    pushMain(context);
+                  }
+                },
+                child: Center(
+                  child: Text(
+                    '登录',
+                    style: TextStyle(
+                        fontSize: DimenSizeUtils.sp_16,
+                        color: ColorUtils.white),
+                  ),
+                ),
+              ),
             )
           ],
         ),
@@ -211,53 +244,10 @@ class LoginState extends State<LoginWidget>{
   @override
   void initState() {
     super.initState();
-    //设置系统statusbar style
     StatusBarUtils.setMainStyle();
   }
+
 }
-
-
-
-
-///登录按钮样式及点击实现
-Widget loginButton(BuildContext context,String acount,String password,String code){
-  return ElevatedButton(
-    style: ElevatedButton.styleFrom(primary: ColorUtils.green2f),
-    onPressed: () {
-
-
-      if ("" == acount) {
-        // Toast.showToast("请输入账号");
-        return;
-      }
-
-      if ("" == password) {
-        // Toast.showToast("请输入密码");
-        return;
-      }
-      if ("" == code) {
-        // Toast.showToast("请输入验证码");
-        return;
-      }
-
-      if (null != acount && null != password && null != code) {
-        pushMain(context);
-      }
-    },
-    child: loginTextWidget(),
-  );
-}
-///登录按钮widget
- Widget loginTextWidget(){
-  return Center(
-    child: Text(
-      '登录',
-      style: TextStyle(
-          fontSize: DimenSizeUtils.sp_16,
-          color: ColorUtils.white),
-    ),
-  );
- }
 
 ///跳转到首页
 void pushMain(BuildContext context) {
