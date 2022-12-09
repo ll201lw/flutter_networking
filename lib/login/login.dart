@@ -4,6 +4,7 @@ import 'package:flutter_networking/utils/dimensize/DimenSizeUtils.dart';
 import 'package:flutter_networking/utils/statusbar/StatusBarUtils.dart';
 
 import '../main/my_main.dart';
+import '../utils/toast/Toast.dart';
 
 class LoginWidget extends StatefulWidget {
   const LoginWidget({super.key});
@@ -204,20 +205,20 @@ class LoginState extends State<LoginWidget>{
                 style: ElevatedButton.styleFrom(primary: ColorUtils.green2f),
                 onPressed: () {
                   var acount = acountController.value;
-                  var password = acountController.value;
-                  var code = acountController.value;
+                  var password = passwordController.value;
+                  var code = codeController.value;
 
-                  if ("" == acountText) {
-                    // Toast.showToast("请输入账号");
+                  if (null==acount||acount.text.isEmpty) {
+                    Toast.showToast("请输入用户名");
                     return;
                   }
 
-                  if ("" == passwordText) {
-                    // Toast.showToast("请输入密码");
+                  if (null==password||password.text.isEmpty) {
+                    Toast.showToast("请输入密码");
                     return;
                   }
-                  if ("" == codeText) {
-                    // Toast.showToast("请输入验证码");
+                  if (null==code||code.text.isEmpty) {
+                    Toast.showToast("请输入验证码");
                     return;
                   }
 
