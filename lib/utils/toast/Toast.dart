@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-// import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_networking/utils/color/ColorUtils.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-enum ToastPosition { TOP, CENTER, BOTTOM }
 
 class Toast {
   static void showToast(
@@ -10,6 +8,6 @@ class Toast {
     String msg
   ) async {
     assert(msg != null);
-    // Fluttertoast.showToast(msg: msg,backgroundColor: ColorUtils.black11,textColor: ColorUtils.white,webPosition: "center");
+    Fluttertoast.showToast(msg: msg,backgroundColor: ColorUtils.greydd,textColor: ColorUtils.black11,gravity: ToastGravity.CENTER,webPosition: "center");
   }
 }
