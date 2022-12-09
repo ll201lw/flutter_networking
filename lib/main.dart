@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_networking/login/login.dart';
 import 'package:flutter_networking/main/my_main.dart';
+import 'package:flutter_networking/utils/color/ColorUtils.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
@@ -25,6 +26,7 @@ class MainWidget extends StatelessWidget{
           // You can use the library anywhere in the app even in theme
           theme: ThemeData(
             primarySwatch: Colors.blue,
+            primaryColor: ColorUtils.transparent,
             textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
           ),
           home: child,

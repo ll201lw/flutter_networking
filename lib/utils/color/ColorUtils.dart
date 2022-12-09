@@ -6,4 +6,5 @@ class ColorUtils {
   static const Color transparent = Colors.transparent;
   static const Color green2f = Color(0xff2fb755);
   static const Color black11 = Color(0xff111111);
+  static const Color greydd = Color(0xFFDDDDDD);
 }

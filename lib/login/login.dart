@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_networking/utils/color/ColorUtils.dart';
 import 'package:flutter_networking/utils/dimensize/DimenSizeUtils.dart';
+import 'package:flutter_networking/utils/statusbar/StatusBarUtils.dart';
 
 import '../main/my_main.dart';
 
@@ -27,6 +28,9 @@ class LoginState extends State<LoginWidget>{
   var showClearButton = false;
   var showPassword = true;
   var codeUrl = "";
+  final Widget iconClearText = Image.asset("image/icon_close.png",width: DimenSizeUtils.dimenSize_15,height: DimenSizeUtils.dimenSize_15,);
+  final Widget iconEyeClose = Image.asset("image/icon_eye_close.png",width: DimenSizeUtils.dimenSize_15,height: DimenSizeUtils.dimenSize_15,);
+  final Widget iconEyeOpen = Image.asset("image/icon_eye_open.png",width: DimenSizeUtils.dimenSize_15,height: DimenSizeUtils.dimenSize_15,);
 
 
   @override
@@ -76,25 +80,29 @@ class LoginState extends State<LoginWidget>{
               height: DimenSizeUtils.getHeightDimens(100),
             ),
             Container(
-              height: DimenSizeUtils.getHeightDimens(21),
+              height: DimenSizeUtils.getHeightDimens(31),
               margin: EdgeInsets.fromLTRB(
                   DimenSizeUtils.dimenSize_30,
                   DimenSizeUtils.dimenSize_0,
                   DimenSizeUtils.dimenSize_30,
-                  DimenSizeUtils.getHeightDimens(10)),
+                  DimenSizeUtils.getHeightDimens(0)),
               child: TextField(
                 controller: acountController,
                 clipBehavior: Clip.none,
                 decoration: InputDecoration(
                     hintText: '请输入用户名',
                     hintStyle: TextStyle(fontSize: DimenSizeUtils.sp_15),
+                    enabledBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: ColorUtils.greydd)
+                    ),
+                    focusedBorder:
+                    const UnderlineInputBorder(
+                        borderSide: BorderSide(color: ColorUtils.greydd)
+                    ),
                     suffixIcon: showClearButton?IconButton(
                       padding: EdgeInsets.fromLTRB(
                           DimenSizeUtils.dimenSize_5, 0, 0, DimenSizeUtils.dimenSize_13),
-                      icon:  Icon(
-                        Icons.cancel,
-                        size: DimenSizeUtils.dimenSize_15,
-                      ),
+                      icon:  iconClearText,
                       onPressed: () {
                         acountController.clear();
                         showClearButton = acountController.text.isNotEmpty;
@@ -116,12 +124,12 @@ class LoginState extends State<LoginWidget>{
               height: DimenSizeUtils.getHeightDimens(39),
             ),
             Container(
-              height: DimenSizeUtils.getHeightDimens(21),
+              height: DimenSizeUtils.getHeightDimens(31),
               margin: EdgeInsets.fromLTRB(
                   DimenSizeUtils.dimenSize_30,
                   DimenSizeUtils.dimenSize_0,
                   DimenSizeUtils.dimenSize_30,
-                  DimenSizeUtils.getHeightDimens(10)),
+                  DimenSizeUtils.getHeightDimens(0)),
               child: TextField(
                 controller: passwordController,
                 clipBehavior: Clip.none,
@@ -129,13 +137,17 @@ class LoginState extends State<LoginWidget>{
                 decoration: InputDecoration(
                   hintText: '请输入密码',
                   hintStyle: TextStyle(fontSize: DimenSizeUtils.sp_15),
+                    enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: ColorUtils.greydd)
+                    ),
+                    focusedBorder:
+                    const UnderlineInputBorder(
+                        borderSide: BorderSide(color: ColorUtils.greydd)
+                    ),
                   suffixIcon: IconButton(
                     padding: EdgeInsets.fromLTRB(
                         DimenSizeUtils.dimenSize_5, 0, 0, DimenSizeUtils.dimenSize_13),
-                    icon:  Icon(
-                      showPassword?Icons.visibility:Icons.visibility_off,
-                      size: DimenSizeUtils.dimenSize_15,
-                    ),
+                    icon:  showPassword?iconEyeClose:iconEyeOpen,
                     onPressed: () {
                       setState(() {
                         showPassword = !showPassword;
@@ -154,18 +166,25 @@ class LoginState extends State<LoginWidget>{
               height: DimenSizeUtils.getHeightDimens(39),
             ),
             Container(
-              height: DimenSizeUtils.getHeightDimens(21),
+              height: DimenSizeUtils.getHeightDimens(31),
               margin: EdgeInsets.fromLTRB(
                   DimenSizeUtils.dimenSize_30,
                   DimenSizeUtils.dimenSize_0,
                   DimenSizeUtils.dimenSize_30,
-                  DimenSizeUtils.getHeightDimens(10)),
+                  DimenSizeUtils.getHeightDimens(0)),
               child: TextField(
                 controller: codeController,
                 clipBehavior: Clip.none,
                 decoration: InputDecoration(
                     hintText: '请输入验证码',
                     hintStyle: TextStyle(fontSize: DimenSizeUtils.sp_15),
+                  enabledBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: ColorUtils.greydd)
+                  ),
+                  focusedBorder:
+                  const UnderlineInputBorder(
+                      borderSide: BorderSide(color: ColorUtils.greydd)
+                  ),
                   // icon: Image.network(codeUrl,fit: BoxFit.fill,),
                 ),
                 style: TextStyle(fontSize: DimenSizeUtils.sp_15),
@@ -181,40 +200,7 @@ class LoginState extends State<LoginWidget>{
               decoration: BoxDecoration(
                   borderRadius:
                   BorderRadius.circular(DimenSizeUtils.dimenSize_8)),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: ColorUtils.green2f),
-                onPressed: () {
-                  var acount = acountController.value;
-                  var password = acountController.value;
-                  var code = acountController.value;
-
-                  if ("" == acountText) {
-                    // Toast.showToast("请输入账号");
-                    return;
-                  }
-
-                  if ("" == passwordText) {
-                    // Toast.showToast("请输入密码");
-                    return;
-                  }
-                  if ("" == codeText) {
-                    // Toast.showToast("请输入验证码");
-                    return;
-                  }
-
-                  if (null != acount && null != password && null != code) {
-                    pushMain(context);
-                  }
-                },
-                child: Center(
-                  child: Text(
-                    '登录',
-                    style: TextStyle(
-                        fontSize: DimenSizeUtils.sp_16,
-                        color: ColorUtils.white),
-                  ),
-                ),
-              ),
+              child: loginButton(context, acountText, passwordText, codeText),
             )
           ],
         ),
@@ -222,8 +208,58 @@ class LoginState extends State<LoginWidget>{
     );
   }
 
+  @override
+  void initState() {
+    super.initState();
+    //设置系统statusbar style
+    StatusBarUtils.setMainStyle();
+  }
 }
 
+
+
+
+///登录按钮样式及点击实现
+Widget loginButton(BuildContext context,String acount,String password,String code){
+  return ElevatedButton(
+    style: ElevatedButton.styleFrom(primary: ColorUtils.green2f),
+    onPressed: () {
+
+
+      if ("" == acount) {
+        // Toast.showToast("请输入账号");
+        return;
+      }
+
+      if ("" == password) {
+        // Toast.showToast("请输入密码");
+        return;
+      }
+      if ("" == code) {
+        // Toast.showToast("请输入验证码");
+        return;
+      }
+
+      if (null != acount && null != password && null != code) {
+        pushMain(context);
+      }
+    },
+    child: loginTextWidget(),
+  );
+}
+///登录按钮widget
+ Widget loginTextWidget(){
+  return Center(
+    child: Text(
+      '登录',
+      style: TextStyle(
+          fontSize: DimenSizeUtils.sp_16,
+          color: ColorUtils.white),
+    ),
+  );
+ }
+
+///跳转到首页
 void pushMain(BuildContext context) {
   Navigator.push(
     context,
