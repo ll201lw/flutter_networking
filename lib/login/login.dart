@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_networking/utils/color/ColorUtils.dart';
+import 'package:flutter_networking/utils/dialog/DialogUtil.dart';
 import 'package:flutter_networking/utils/dimensize/DimenSizeUtils.dart';
 import 'package:flutter_networking/utils/statusbar/StatusBarUtils.dart';
 
@@ -224,7 +225,11 @@ class LoginState extends State<LoginWidget>{
                   }
 
                   if (acount.text.isNotEmpty &&password.text.isNotEmpty &&code.text.isNotEmpty) {
-                    pushMain(context);
+                    DialogUtil.show(context, "加载中...");
+                    Future.delayed(const Duration(seconds: 2),(){
+                      DialogUtil.dismiss(context);
+                      pushMain(context);
+                    });
                   }
                 },
                 child: Center(
