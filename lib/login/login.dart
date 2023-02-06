@@ -38,6 +38,7 @@ class LoginState extends State<LoginWidget>{
   Widget build(BuildContext context) {
 
     return Scaffold(
+      key: UniqueKey(),
       resizeToAvoidBottomInset: false,
       body: Form(
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -209,16 +210,16 @@ class LoginState extends State<LoginWidget>{
                   var code = acountController.value;
 
                   if ("" == acountText) {
-                    // Toast.showToast("请输入账号");
+                    Toast.showToast(context,"请输入账号");
                     return;
                   }
 
                   if ("" == passwordText) {
-                    // Toast.showToast("请输入密码");
+                    Toast.showToast(context,"请输入密码");
                     return;
                   }
                   if ("" == codeText) {
-                    // Toast.showToast("请输入验证码");
+                    Toast.showToast(context,"请输入验证码");
                     return;
                   }
 
