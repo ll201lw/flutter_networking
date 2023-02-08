@@ -114,7 +114,7 @@ class LoginState extends State<LoginWidget>{
                       },
                     ):null
                 ),
-                style: TextStyle(fontSize: DimenSizeUtils.sp_15),
+                style: TextStyle(fontSize: DimenSizeUtils.sp_15,color: Colors.black),
                 onChanged: (text) {
                   acountText = text;
                   showClearButton = acountController.text.isNotEmpty?true:false;
@@ -158,7 +158,7 @@ class LoginState extends State<LoginWidget>{
                     },
                   )
                 ),
-                style: TextStyle(fontSize: DimenSizeUtils.sp_15),
+                style: TextStyle(fontSize: DimenSizeUtils.sp_15,color: Colors.black),
                 onChanged: (text) {
                   passwordText = text;
                   showPassword = passwordController.text.isNotEmpty?true:false;
@@ -190,7 +190,7 @@ class LoginState extends State<LoginWidget>{
                   ),
                   // icon: Image.network(codeUrl,fit: BoxFit.fill,),
                 ),
-                style: TextStyle(fontSize: DimenSizeUtils.sp_15),
+                style: TextStyle(fontSize: DimenSizeUtils.sp_15,color: Colors.black),
                 onChanged: (text) {
                   codeText = text;
                 },
