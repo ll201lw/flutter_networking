@@ -2,12 +2,14 @@
 
 
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import 'BaseResponse.dart';
+import 'error_handle.dart';
 
 int _connectTimeOut = 15;
 int _recieveTimeOut = 15;
@@ -76,10 +78,44 @@ class DioUtils{
     }
   }
 
+  Future<dynamic> request<T>(Method method,String url,{
+    SuccessCallback<T?>? onSuccess,
+    ErrorCallback? onError,
+    Object? params,
+    Map<String,dynamic>? queryParammeters,
+    CancelToken? cancelToken,
+    Options? options,
+  }){
+    return _request(method.value, url,
+    data: params,
+    queryParameters: queryParammeters,
+    options: options,
+    cancelToken: cancelToken)..then<void>((BaseResponse<T> result) {
+      if (result.code == 0) {
+        onSuccess?.call(result.data);
+      } else {
+        _onError(result.code, result.message, onError);
+      }
+    } as FutureOr<void> Function(BaseResponse value), onError: (dynamic e) {
+      final NetError error = ExceptionHandle.handleException(e);
+      _onError(error.code, error.msg, onError);
+    });;
+
+  }
+
   checkOptions(Options options,String method){
     options ??= Options();
     options.method = method;
     return options;
+  }
+
+  void _onError(int? code, String msg, ErrorCallback? onError) {
+    if (code == null) {
+      code = 9999;
+      msg = '未知异常';
+    }
+    // Log.e('接口请求异常： code: $code, mag: $msg');
+    onError?.call(code, msg);
   }
 
 }
