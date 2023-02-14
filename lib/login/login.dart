@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_networking/http/DioUtils.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_networking/login/PicCodeEntity.dart';
 import 'package:flutter_networking/utils/color/ColorUtils.dart';
 import 'package:flutter_networking/utils/dialog/DialogUtil.dart';
 import 'package:flutter_networking/utils/dimensize/DimenSizeUtils.dart';
+import 'package:flutter_networking/utils/reg/ValidatorUtil.dart';
 import 'package:flutter_networking/utils/statusbar/StatusBarUtils.dart';
 
 import '../main/my_main.dart';
@@ -23,7 +25,7 @@ class LoginWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => LoginState();
 }
-
+String? imageUuid = "";
 Widget codeImage = Image.asset(
   "image/icon_close.png",
 );
@@ -242,10 +244,21 @@ class LoginState extends State<LoginWidget> {
                     return;
                   }
 
+                  if(!ValidatorUtil.isAccount(acountText)){
+                    Toast.showToast(context, "请输入有效用户名(用户名为1-8位字母、数字或文字组成)");
+                    return;
+                  }
+
                   if ("" == passwordText) {
                     Toast.showToast(context, "请输入密码");
                     return;
                   }
+
+                  if(!ValidatorUtil.isPassword(passwordText)){
+                    Toast.showToast(context, "请输入密码(6-20位字母数字组合)");
+                    return;
+                  }
+
                   if ("" == codeText) {
                     Toast.showToast(context, "请输入验证码");
                     return;
@@ -258,7 +271,7 @@ class LoginState extends State<LoginWidget> {
                     Future.delayed(const Duration(seconds: 2), () {
                       DialogUtil.dismiss(context);
                       // pushMain(context);
-                      changeCodeImage(context, setState);
+                      login(context, acountText, passwordText, codeText, imageUuid!);
                     });
                   }
                 },
@@ -294,11 +307,27 @@ void changeCodeImage(BuildContext context,Function setState){
     var entity = PicCodeEntity.fromJson(
         data as Map<String, dynamic>);
     setState(() {
+      imageUuid = entity.uuid;
       codeImage = Image.memory(base64.decoder
           .convert(entity.img!.split(',')[1]));
     });
   }, onError: (t, value) {
     Toast.showToast(context, "$t $value");
+  });
+}
+
+void login(BuildContext context,String username,String password,String code,String uuid){
+  Map<String,dynamic> params = HashMap();
+  params['username'] = username;
+  params['password'] = password;
+  params['code'] = code;
+  params['uuid'] = uuid;
+  DioUtils.instacne.requestNetwork(Method.post, HttpApi.getPath(HttpApi.login),params: params,onSuccess: (data){
+    print(data.toString());
+    pushMain(context);
+  },onError: (code,message){
+    print("message:$code $message");
+    Toast.showToast(context, message);
   });
 }
 
