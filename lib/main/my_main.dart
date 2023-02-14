@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
+import 'package:flutter_networking/utils/dimensize/DimenSizeUtils.dart';
 
 class RandomWords extends StatefulWidget {
   const RandomWords({super.key});
@@ -11,7 +12,7 @@ class RandomWords extends StatefulWidget {
 class _RandomWordsState extends State<RandomWords> {
   final suggestions = <WordPair>[];
   final Set<WordPair> saved = <WordPair>{};
-  final TextStyle biggerFront = const TextStyle(fontSize: 16);
+  final TextStyle biggerFront = const TextStyle(fontSize: 16,color: Colors.black);
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,7 @@ class _RandomWordsState extends State<RandomWords> {
   Widget buildRow(WordPair pair) {
     final bool alreadSaved = saved.contains(pair);
     return ListTile(
-      title: Text(pair.asPascalCase),
+      title: Text(pair.asPascalCase,style: TextStyle(fontSize: DimenSizeUtils.sp_13,color: Colors.black),),
       trailing: Icon(
         alreadSaved ? Icons.favorite : Icons.favorite_border,
         color: alreadSaved ? Colors.blueAccent : null,
@@ -67,6 +68,7 @@ class _RandomWordsState extends State<RandomWords> {
         return ListTile(
           title: Text(
             pair.asPascalCase,
+            style: TextStyle(fontSize:DimenSizeUtils.sp_13,color: Colors.black),
           ),
         );
       });
@@ -76,7 +78,8 @@ class _RandomWordsState extends State<RandomWords> {
         appBar: AppBar(
           title: const Text('Save Suggestions'),
         ),
-        body: ListView(children: divided),
+        body: Padding(padding: EdgeInsets.fromLTRB(DimenSizeUtils.dimenSize_10, 0, DimenSizeUtils.dimenSize_10, 0),
+        child: ListView(children: divided),),
       );
     }));
   }
