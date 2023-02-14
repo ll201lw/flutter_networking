@@ -1,25 +1,22 @@
-
-
-
-
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-
+import 'package:flutter_networking/constant/Constant.dart';
+import 'package:flutter_networking/httpapi/HttpHeader.dart';
 import 'BaseResponse.dart';
 import 'error_handle.dart';
 
-int _connectTimeOut = 15;
-int _recieveTimeOut = 15;
-int _sendTimeOut = 15;
+
+int _connectTimeOut = 15000;
+int _recieveTimeOut = 15000;
+int _sendTimeOut = 15000;
 String _baseUrl = "";
 List<Interceptor> _interceptors = [];
 
 
-typedef SuccessCallback<T> = Function(T data);
-typedef SuccessListCallback<T> = Function(List<T> data);
+typedef SuccessCallback<T> = Function(Object? data);
+typedef SuccessListCallback<T> = Function(List<Object>? data);
 typedef ErrorCallback = Function(int code,String msg);
 
 
@@ -41,13 +38,15 @@ class DioUtils{
       receiveTimeout: _recieveTimeOut,
       sendTimeout: _sendTimeOut,
       responseType: ResponseType.json,
+      headers: HttpHeader.headers(),
       validateStatus: (_){
         return true;
       },
-      baseUrl: _baseUrl,
+      baseUrl: Constant.networkUrl,
     );
 
     _dio = Dio(options);
+    _dio.interceptors.add(LogInterceptor());
 
     void addInterceptor(Interceptor interceptor){
       _dio.interceptors.add(interceptor);
@@ -55,57 +54,62 @@ class DioUtils{
     _interceptors.forEach(addInterceptor);
   }
 
-  Future<BaseResponse<T>> _request<T>(String method,String url,{
+  Future<BaseResponse> _request(String method,String url,{
     Object? data,
     Map<String,dynamic>? queryParameters,
     CancelToken? cancelToken,
+    Map<String,dynamic>? header,
     Options? options,
   })async{
     final Response<String> response = await _dio.request<String>(
       url,
       data: data,
       queryParameters: queryParameters,
-      options: checkOptions(options!, method),
-      cancelToken: cancelToken
+      options: checkOptions(options, method,header),
+      cancelToken: cancelToken,
     );
+    // print("response=>${response.data}");
     try{
       final String data = response.data.toString();
       final bool isCompute = data.length > 10 * 1024;
       final Map<String,dynamic> map = isCompute ? await compute(parseData,data):parseData(data);
-      return BaseResponse<T>.fromJson(map);
+      return BaseResponse.fromJson(map);
     }catch(e){
-      return BaseResponse<T>(1001,"解析出错!",null);
+      print("response=>${e.toString()}");
+      return BaseResponse(1001,"解析出错!",null);
     }
   }
 
   Future<dynamic> request<T>(Method method,String url,{
-    SuccessCallback<T?>? onSuccess,
+    SuccessCallback<Object?>? onSuccess,
     ErrorCallback? onError,
     Object? params,
     Map<String,dynamic>? queryParammeters,
     CancelToken? cancelToken,
+    Map<String,dynamic>? header,
     Options? options,
   }){
     return _request(method.value, url,
     data: params,
     queryParameters: queryParammeters,
+    header: header,
     options: options,
-    cancelToken: cancelToken)..then<void>((BaseResponse<T> result) {
-      if (result.code == 0) {
-        onSuccess?.call(result.data);
+    cancelToken: cancelToken)..then<void>((BaseResponse result) {
+      if (result.status == 200) {
+        onSuccess?.call(result.result);
       } else {
-        _onError(result.code, result.message, onError);
+        _onError(result.status, result.message, onError);
       }
-    } as FutureOr<void> Function(BaseResponse value), onError: (dynamic e) {
+    }, onError: (dynamic e) {
       final NetError error = ExceptionHandle.handleException(e);
       _onError(error.code, error.msg, onError);
-    });;
-
+    });
   }
 
-  checkOptions(Options options,String method){
+  checkOptions(Options? options,String method,Map<String,dynamic>? header){
     options ??= Options();
     options.method = method;
+    options.headers = header;
     return options;
   }
 
@@ -117,6 +121,34 @@ class DioUtils{
     // Log.e('接口请求异常： code: $code, mag: $msg');
     onError?.call(code, msg);
   }
+
+  Future<dynamic> requestNetwork<Object>(Method method,String url,{
+    SuccessCallback<Object?>? onSuccess,
+    ErrorCallback? onError,
+    Object? params,
+    Map<String,dynamic>? queryParameters,
+    CancelToken? cancelToken,
+    Map<String,dynamic>? header,
+    Options? options,
+  }){
+    return _request(method.value, url,
+    data: params,
+    queryParameters: queryParameters,
+    header: header,
+    options: options,
+    cancelToken: cancelToken,).then<void>((BaseResponse result){
+      if(result.status == 200){
+        onSuccess?.call(result.result);
+      }else{
+        _onError?.call(result.status,result.message,onError);
+      }
+    },onError: (dynamic e){
+      final NetError error = ExceptionHandle.handleException(e);
+      _onError(error.code,error.msg,onError);
+    });
+  }
+
+
 
 }
 

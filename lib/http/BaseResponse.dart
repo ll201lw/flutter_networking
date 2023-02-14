@@ -1,37 +1,32 @@
+import 'package:flutter_networking/utils/json/JsonConvert.dart';
 import '../constant/Constant.dart';
 
 
+class BaseResponse{
 
-class BaseResponse<T>{
-
-  int? code;
+  int? status;
   late String message;
-  T? data;
+  Object? result;
 
-  BaseResponse(this.code,this.message,this.data);
+  BaseResponse(this.status,this.message,this.result);
 
 
   BaseResponse.fromJson(Map<String,dynamic> json){
-    code = json[Constant.code] as int?;
+    if(null == json){
+      result = "";
+    }
+    status = json[Constant.code] as int?;
     message = json[Constant.message] as String;
     if(json.containsKey(Constant.data)){
-      data = _parseToObj<T>(json[Constant.data] as Object?);
+      result = json[Constant.data];
     }
   }
 
-  T? _parseToObj<O>(Object? json){
-    if(json == null){
+  Object? _parseToObj(Object? data){
+    if(data == null){
       return null;
     }
-    if(T.toString() == 'String'){
-      return json.toString() as T;
-    }else if(T.toString() == 'Map<danamic,danamic>'){
-      return json as T;
-    }
-    return null;
-    // else{
-    //   return JsonConver.fromJsonAsT<T>(json);
-    // }
+    return data;
   }
 
 }

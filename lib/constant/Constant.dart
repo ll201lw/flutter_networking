@@ -7,9 +7,9 @@ class Constant{
   ///测试环境
   static const String networkUrl = 'https://smart-sit.farmbgy.com';
 
-  static const String code = 'code';
+  static const String code = 'status';
   static const String message = 'message';
-  static const String data = 'data';
+  static const String data = 'result';
 
 
 
