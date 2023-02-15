@@ -5,6 +5,7 @@ import 'package:flutter_networking/http/DioUtils.dart';
 import 'package:flutter_networking/httpapi/HttpApi.dart';
 import 'package:flutter_networking/httpapi/HttpHeader.dart';
 import 'package:flutter_networking/login/PicCodeEntity.dart';
+import 'package:flutter_networking/utils/aes/AesEncryptUtil.dart';
 import 'package:flutter_networking/utils/color/ColorUtils.dart';
 import 'package:flutter_networking/utils/dialog/DialogUtil.dart';
 import 'package:flutter_networking/utils/dimensize/DimenSizeUtils.dart';
@@ -316,10 +317,12 @@ void changeCodeImage(BuildContext context,Function setState){
   });
 }
 
-void login(BuildContext context,String username,String password,String code,String uuid){
+void login(BuildContext context,String username,String password,String code,String uuid)async{
+  String mPassword = await AesEncryptUtil.encrypt(password);
+  print("mPassword:$mPassword");
   Map<String,dynamic> params = HashMap();
   params['username'] = username;
-  params['password'] = password;
+  params['password'] = mPassword;
   params['code'] = code;
   params['uuid'] = uuid;
   DioUtils.instacne.requestNetwork(Method.post, HttpApi.getPath(HttpApi.login),params: params,onSuccess: (data){

@@ -51,6 +51,7 @@ dev_dependencies:
   fluttertoast: ^8.1.1
   flutter_screenutil: ^5.6.0
   screen_ratio_adapter: ^0.0.2
+  encrypt: ^5.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
