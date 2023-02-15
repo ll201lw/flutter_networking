@@ -1,15 +1,18 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_networking/constant/Constant.dart';
 import 'package:flutter_networking/http/DioUtils.dart';
 import 'package:flutter_networking/httpapi/HttpApi.dart';
 import 'package:flutter_networking/httpapi/HttpHeader.dart';
-import 'package:flutter_networking/login/PicCodeEntity.dart';
+import 'package:flutter_networking/login/entity/LoginEntity.dart';
+import 'package:flutter_networking/login/entity/PicCodeEntity.dart';
 import 'package:flutter_networking/utils/aes/AesEncryptUtil.dart';
 import 'package:flutter_networking/utils/color/ColorUtils.dart';
 import 'package:flutter_networking/utils/dialog/DialogUtil.dart';
 import 'package:flutter_networking/utils/dimensize/DimenSizeUtils.dart';
 import 'package:flutter_networking/utils/reg/ValidatorUtil.dart';
+import 'package:flutter_networking/utils/sp/SPUtils.dart';
 import 'package:flutter_networking/utils/statusbar/StatusBarUtils.dart';
 
 import '../main/my_main.dart';
@@ -20,6 +23,7 @@ class LoginWidget extends StatefulWidget {
 
   @override
   LoginState build(BuildContext context) {
+    SPUtils.init();
     return LoginState();
   }
 
@@ -269,11 +273,7 @@ class LoginState extends State<LoginWidget> {
                       password.text.isNotEmpty &&
                       code.text.isNotEmpty) {
                     DialogUtil.show(context, "加载中...");
-                    Future.delayed(const Duration(seconds: 2), () {
-                      DialogUtil.dismiss(context);
-                      // pushMain(context);
-                      login(context, acountText, passwordText, codeText, imageUuid!);
-                    });
+                    login(context, acountText, passwordText, codeText, imageUuid!);
                   }
                 },
                 child: Center(
@@ -296,6 +296,7 @@ class LoginState extends State<LoginWidget> {
   void initState() {
     super.initState();
     StatusBarUtils.setMainStyle();
+    changeCodeImage(context,setState);
   }
 }
 
@@ -319,17 +320,24 @@ void changeCodeImage(BuildContext context,Function setState){
 
 void login(BuildContext context,String username,String password,String code,String uuid)async{
   String mPassword = await AesEncryptUtil.encrypt(password);
-  print("mPassword:$mPassword");
   Map<String,dynamic> params = HashMap();
   params['username'] = username;
   params['password'] = mPassword;
   params['code'] = code;
   params['uuid'] = uuid;
   DioUtils.instacne.requestNetwork(Method.post, HttpApi.getPath(HttpApi.login),params: params,onSuccess: (data){
-    print(data.toString());
+    LoginEntity loginEntity = LoginEntity.fromJson(data as Map<String,dynamic>);
+    if(null!=loginEntity) {
+      Constant.tokenValue = loginEntity.access_token!;
+      Constant.refreshTokenValue = loginEntity.refresh_token!;
+      SPUtils.setString(Constant.token, loginEntity.access_token);
+      SPUtils.setString(Constant.refresh_token, loginEntity.refresh_token);
+      print("${loginEntity.access_token} ${loginEntity.access_token}");
+    }
+    DialogUtil.dismiss(context);
     pushMain(context);
   },onError: (code,message){
-    print("message:$code $message");
+    DialogUtil.dismiss(context);
     Toast.showToast(context, message);
   });
 }

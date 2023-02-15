@@ -12,8 +12,14 @@ class Constant{
   static const String data = 'result';
 
 
+  static const String refresh_token = "refresh_token";
+
+  static const String  authorization = "Authorization";
+  static const String  bearer = "Bearer ";
+  static const String  token = "token";
 
   static String tokenValue = '';
+  static String refreshTokenValue = '';
   static String tokenLoginOutValue = '';
 
 }
