@@ -23,7 +23,9 @@ class LoginWidget extends StatefulWidget {
 
   @override
   LoginState build(BuildContext context) {
-    SPUtils.init();
+    Future.value((){
+      SPUtils.init();
+    });
     return LoginState();
   }
 
