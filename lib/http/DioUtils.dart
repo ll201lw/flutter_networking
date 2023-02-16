@@ -64,7 +64,7 @@ class DioUtils {
       url,
       data: data,
       queryParameters: queryParameters,
-      options: checkOptions(options, method, header),
+      options: checkOptions(options, method),
       cancelToken: cancelToken,
     );
     // print("response=>${response.data}");
@@ -109,10 +109,10 @@ class DioUtils {
       });
   }
 
-  checkOptions(Options? options, String method, Map<String, dynamic>? header) {
+  checkOptions(Options? options, String method) {
     options ??= Options();
     options.method = method;
-    options.headers = header;
+    options.headers = HttpHeader.headers();
     return options;
   }
 
@@ -121,7 +121,6 @@ class DioUtils {
       code = 9999;
       msg = '未知异常';
     }
-    // Log.e('接口请求异常： code: $code, mag: $msg');
     onError?.call(code, msg);
   }
 

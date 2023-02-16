@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_networking/login/login.dart';
 import 'package:flutter_networking/main/my_main.dart';
 import 'package:flutter_networking/utils/color/ColorUtils.dart';
-import 'package:flutter_networking/utils/sp/SPUtils.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 

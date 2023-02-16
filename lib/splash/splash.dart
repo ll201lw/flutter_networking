@@ -7,8 +7,9 @@ class SpashWidget extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-
-    return  Container();
+    return  const Center(
+      child: Text("首页"),
+    );
   }
 
 }

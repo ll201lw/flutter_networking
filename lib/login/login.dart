@@ -15,6 +15,7 @@ import 'package:flutter_networking/utils/reg/ValidatorUtil.dart';
 import 'package:flutter_networking/utils/sp/SPUtils.dart';
 import 'package:flutter_networking/utils/statusbar/StatusBarUtils.dart';
 
+import '../home/home.dart';
 import '../main/my_main.dart';
 import '../utils/toast/Toast.dart';
 
@@ -23,15 +24,16 @@ class LoginWidget extends StatefulWidget {
 
   @override
   LoginState build(BuildContext context) {
-    Future.value((){
-      SPUtils.init();
-    });
+    // Future.value((){
+    //   SPUtils.init();
+    // });
     return LoginState();
   }
 
   @override
   State<StatefulWidget> createState() => LoginState();
 }
+
 String? imageUuid = "";
 Widget codeImage = Image.asset(
   "image/icon_close.png",
@@ -227,9 +229,13 @@ class LoginState extends State<LoginWidget> {
                       right: 3,
                       bottom: 5,
                       width: 100,
-                      child: IconButton(onPressed: (){
-                        changeCodeImage(context, setState);
-                      }, icon: codeImage,),)
+                      child: IconButton(
+                        onPressed: () {
+                          changeCodeImage(context, setState);
+                        },
+                        icon: codeImage,
+                      ),
+                    )
                   ],
                 )),
             Container(
@@ -251,7 +257,7 @@ class LoginState extends State<LoginWidget> {
                     return;
                   }
 
-                  if(!ValidatorUtil.isAccount(acountText)){
+                  if (!ValidatorUtil.isAccount(acountText)) {
                     Toast.showToast(context, "请输入有效用户名(用户名为1-8位字母、数字或文字组成)");
                     return;
                   }
@@ -261,7 +267,7 @@ class LoginState extends State<LoginWidget> {
                     return;
                   }
 
-                  if(!ValidatorUtil.isPassword(passwordText)){
+                  if (!ValidatorUtil.isPassword(passwordText)) {
                     Toast.showToast(context, "请输入密码(6-20位字母数字组合)");
                     return;
                   }
@@ -275,7 +281,8 @@ class LoginState extends State<LoginWidget> {
                       password.text.isNotEmpty &&
                       code.text.isNotEmpty) {
                     DialogUtil.show(context, "加载中...");
-                    login(context, acountText, passwordText, codeText, imageUuid!);
+                    login(context, acountText, passwordText, codeText,
+                        imageUuid!);
                   }
                 },
                 child: Center(
@@ -297,39 +304,45 @@ class LoginState extends State<LoginWidget> {
   @override
   void initState() {
     super.initState();
+    Future.value(() {
+      SPUtils.init();
+    });
     StatusBarUtils.setMainStyle();
-    changeCodeImage(context,setState);
+    changeCodeImage(context, setState);
   }
 }
 
+Widget getImage(BuildContext context, PicCodeEntity entity) {
+  return Image.memory(base64.decoder.convert(entity.img!.split(',')[1]));
+}
 
 ///修改验证码图片
-void changeCodeImage(BuildContext context,Function setState){
-  DioUtils.instacne.requestNetwork(
-      Method.get, HttpApi.getPath(HttpApi.picCode),
+void changeCodeImage(BuildContext context, Function setState) {
+  DioUtils.instacne.requestNetwork(Method.get, HttpApi.getPath(HttpApi.picCode),
       header: HttpHeader.headers(), onSuccess: (data) {
-    var entity = PicCodeEntity.fromJson(
-        data as Map<String, dynamic>);
+    var entity = PicCodeEntity.fromJson(data as Map<String, dynamic>);
     setState(() {
       imageUuid = entity.uuid;
-      codeImage = Image.memory(base64.decoder
-          .convert(entity.img!.split(',')[1]));
+      codeImage = getImage(context, entity);
     });
   }, onError: (t, value) {
     Toast.showToast(context, "$t $value");
   });
 }
 
-void login(BuildContext context,String username,String password,String code,String uuid)async{
+void login(BuildContext context, String username, String password, String code,
+    String uuid) async {
   String mPassword = await AesEncryptUtil.encrypt(password);
-  Map<String,dynamic> params = HashMap();
+  Map<String, dynamic> params = HashMap();
   params['username'] = username;
   params['password'] = mPassword;
   params['code'] = code;
   params['uuid'] = uuid;
-  DioUtils.instacne.requestNetwork(Method.post, HttpApi.getPath(HttpApi.login),params: params,onSuccess: (data){
-    LoginEntity loginEntity = LoginEntity.fromJson(data as Map<String,dynamic>);
-    if(null!=loginEntity) {
+  DioUtils.instacne.requestNetwork(Method.post, HttpApi.getPath(HttpApi.login),
+      params: params, onSuccess: (data) {
+    LoginEntity loginEntity =
+        LoginEntity.fromJson(data as Map<String, dynamic>);
+    if (null != loginEntity) {
       Constant.tokenValue = loginEntity.access_token!;
       Constant.refreshTokenValue = loginEntity.refresh_token!;
       SPUtils.setString(Constant.token, loginEntity.access_token);
@@ -338,7 +351,7 @@ void login(BuildContext context,String username,String password,String code,Stri
     }
     DialogUtil.dismiss(context);
     pushMain(context);
-  },onError: (code,message){
+  }, onError: (code, message) {
     DialogUtil.dismiss(context);
     Toast.showToast(context, message);
   });
@@ -348,7 +361,7 @@ void login(BuildContext context,String username,String password,String code,Stri
 void pushMain(BuildContext context) {
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (_) => const RandomWords()),
+    MaterialPageRoute(builder: (_) => const HomePage()),
   );
 }
 

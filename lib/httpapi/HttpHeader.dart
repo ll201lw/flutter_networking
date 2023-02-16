@@ -13,9 +13,9 @@ class HttpHeader{
     map["client_id"] = "telematicsApp";
     map["client_secret"] = "telematicsApp";
     map["Referer"] = Constant.networkUrl;
-    // if(Constant.tokenValue.isEmpty){
-    //   map[Constant.authorization] = "${Constant.bearer}${Constant.tokenValue}";
-    // }
+    if(Constant.tokenValue!=null&&"" != Constant.tokenValue){
+      map[Constant.authorization] = "${Constant.bearer}${Constant.tokenValue}";
+    }
     return map;
   }
 }
