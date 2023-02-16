@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flutter_networking">
    <application
-        android:label="flutter_networking"
+        android:label="车联网app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
