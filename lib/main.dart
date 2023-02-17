@@ -33,15 +33,6 @@ class MainWidget extends StatelessWidget{
       },
       child: const LoginWidget(),
     );
-
-
-
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: LoginWidget(),
-      ),
-    );
   }
 }
 void pushHome(BuildContext context){

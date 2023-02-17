@@ -11,6 +11,8 @@ class Constant{
   static const String message = 'message';
   static const String data = 'result';
 
+  static const String username = "username";
+  static const String password = "password";
 
   static const String refresh_token = "refresh_token";
 

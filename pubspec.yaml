@@ -76,6 +76,15 @@ flutter:
     - image/home/icon_task_normal.png
     - image/home/icon_mine_select.png
     - image/home/icon_mine_normal.png
+    - image/home/home/icon_main_message.png
+    - image/home/home/icon_machine_archives.png
+    - image/home/home/icon_work_report.png
+    - image/home/home/icon_drivers_manager.png
+    - image/home/home/icon_machine_tools.png
+    - image/home/home/icon_post_manager.png
+    - image/home/home/icon_field_distribution.png
+    - image/home/home/icon_electronic_fence.png
+    - image/home/home/icon_maintenance.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

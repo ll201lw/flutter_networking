@@ -43,8 +43,8 @@ class LoginState extends State<LoginWidget> {
   final TextEditingController acountController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController codeController = TextEditingController();
-  var acountText = "";
-  var passwordText = "";
+  var acountText = "13537581672";
+  var passwordText = "123Qwe@";
   var codeText = "";
   var showClearButton = false;
   var showPassword = true;
@@ -68,6 +68,10 @@ class LoginState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if(mounted){
+      acountController?.text = acountText;
+      passwordController?.text = passwordText;
+    }
     return Scaffold(
       key: UniqueKey(),
       resizeToAvoidBottomInset: false,
@@ -199,7 +203,7 @@ class LoginState extends State<LoginWidget> {
               height: DimenSizeUtils.getHeightDimens(39),
             ),
             Container(
-                height: DimenSizeUtils.getHeightDimens(31),
+                height: DimenSizeUtils.getHeightDimens(35),
                 margin: EdgeInsets.fromLTRB(
                     DimenSizeUtils.dimenSize_30,
                     DimenSizeUtils.dimenSize_0,
@@ -303,10 +307,10 @@ class LoginState extends State<LoginWidget> {
 
   @override
   void initState() {
-    super.initState();
     Future.value(() {
       SPUtils.init();
     });
+    super.initState();
     StatusBarUtils.setMainStyle();
     changeCodeImage(context, setState);
   }
@@ -343,13 +347,20 @@ void login(BuildContext context, String username, String password, String code,
     LoginEntity loginEntity =
         LoginEntity.fromJson(data as Map<String, dynamic>);
     if (null != loginEntity) {
+      //获取token
       Constant.tokenValue = loginEntity.access_token!;
       Constant.refreshTokenValue = loginEntity.refresh_token!;
+      //存储username和password
+      SPUtils.setString(Constant.username, username);
+      SPUtils.setString(Constant.password, password);
+      //存储token
       SPUtils.setString(Constant.token, loginEntity.access_token);
       SPUtils.setString(Constant.refresh_token, loginEntity.refresh_token);
       print("${loginEntity.access_token} ${loginEntity.access_token}");
     }
+    //关闭加载框
     DialogUtil.dismiss(context);
+    //跳转到主页
     pushMain(context);
   }, onError: (code, message) {
     DialogUtil.dismiss(context);
