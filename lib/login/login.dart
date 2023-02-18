@@ -2,7 +2,6 @@ import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_networking/constant/Constant.dart';
-import 'package:flutter_networking/http/DioUtils.dart';
 import 'package:flutter_networking/httpapi/HttpApi.dart';
 import 'package:flutter_networking/httpapi/HttpHeader.dart';
 import 'package:flutter_networking/login/entity/LoginEntity.dart';
@@ -17,6 +16,7 @@ import 'package:flutter_networking/utils/statusbar/StatusBarUtils.dart';
 
 import '../home/home.dart';
 import '../main/my_main.dart';
+import '../network/http/DioUtils.dart';
 import '../utils/toast/Toast.dart';
 
 class LoginWidget extends StatefulWidget {

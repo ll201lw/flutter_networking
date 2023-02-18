@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_networking/utils/color/ColorUtils.dart';
 import 'package:flutter_networking/utils/dimensize/DimenSizeUtils.dart';
+import 'package:flutter_networking/utils/toast/ToastUtil.dart';
+
+import '../../constant/Constant.dart';
 
 class ManagerPage extends StatefulWidget {
   const ManagerPage({super.key});
@@ -15,19 +18,49 @@ class ManagerState extends State<ManagerPage> {
   static final double imageWidth = DimenSizeUtils.dimenSize_41;
   static final double imageHeight = DimenSizeUtils.dimenSize_40;
   List<Widget> itemList = [
-    Image.asset("image/home/home/icon_machine_archives.png",width: imageWidth,),
-    Image.asset("image/home/home/icon_work_report.png",width: imageWidth,),
-    Image.asset("image/home/home/icon_drivers_manager.png",width: imageWidth,),
-    Image.asset("image/home/home/icon_machine_tools.png",width: imageWidth,),
-    Image.asset("image/home/home/icon_post_manager.png",width: imageWidth,),
-    Image.asset("image/home/home/icon_field_distribution.png",width: imageWidth,),
-    Image.asset("image/home/home/icon_electronic_fence.png",width: imageWidth,),
-    Image.asset("image/home/home/icon_maintenance.png",width: imageWidth,),
+    Image.asset(
+      "image/home/home/icon_machine_archives.png",
+      width: imageWidth,
+    ),
+    Image.asset(
+      "image/home/home/icon_work_report.png",
+      width: imageWidth,
+    ),
+    Image.asset(
+      "image/home/home/icon_drivers_manager.png",
+      width: imageWidth,
+    ),
+    Image.asset(
+      "image/home/home/icon_machine_tools.png",
+      width: imageWidth,
+    ),
+    Image.asset(
+      "image/home/home/icon_post_manager.png",
+      width: imageWidth,
+    ),
+    Image.asset(
+      "image/home/home/icon_field_distribution.png",
+      width: imageWidth,
+    ),
+    Image.asset(
+      "image/home/home/icon_electronic_fence.png",
+      width: imageWidth,
+    ),
+    Image.asset(
+      "image/home/home/icon_maintenance.png",
+      width: imageWidth,
+    ),
   ];
 
   List<String> itemName = [
-    "农机档案", "工作日报","机手管理","机具管理",
-    "岗位管理","农场管理","电子围栏","维修服务",
+    "农机档案",
+    "工作日报",
+    "机手管理",
+    "机具管理",
+    "岗位管理",
+    "农场管理",
+    "电子围栏",
+    "维修服务",
   ];
 
   @override
@@ -114,43 +147,83 @@ class ManagerState extends State<ManagerPage> {
                     topRight: Radius.circular(DimenSizeUtils.dimenSize_8),
                     bottomLeft: Radius.circular(DimenSizeUtils.dimenSize_8),
                     bottomRight: Radius.circular(DimenSizeUtils.dimenSize_8))),
-            child: GridView.count(
+            child: Container(
+              padding: EdgeInsets.only(top: DimenSizeUtils.dimenSize_25),
+              child: GridView.count(
+                padding: EdgeInsets.zero,
                 crossAxisCount: 4,
                 mainAxisSpacing: DimenSizeUtils.dimenSize_12,
                 crossAxisSpacing: DimenSizeUtils.dimenSize_13,
-              children: _buildGridViewChild(context,itemList,itemName),
+                children: _buildGridViewChild(context, itemList, itemName),
+              ),
             ),
           )
         ],
       ),
     );
-
-
-
   }
 
-  List<Widget> _buildGridViewChild(BuildContext context,List<Widget> itemList,List<String> itemName){
+  List<Widget> _buildGridViewChild(
+      BuildContext context, List<Widget> itemList, List<String> itemName) {
     List<Widget> list = [];
-    for(int i=0;i<itemList.length;i++){
-      Widget widget = _buildChild(context, itemList.elementAt(i), itemName.elementAt(i));
+    for (int i = 0; i < itemList.length; i++) {
+      Widget widget =
+          _buildChild(context, itemList.elementAt(i), itemName.elementAt(i),i);
       list.add(widget);
     }
     return list;
   }
 
-
-  Widget _buildChild(BuildContext context,Widget widget,String name){
-    return Container(
-      width: DimenSizeUtils.dimenSize_52,
-      height: DimenSizeUtils.dimenSize_88,
-      child: Column(
-        children: [
-          widget,
-          SizedBox(height: DimenSizeUtils.dimenSize_17,),
-          Center(widthFactor: 1,heightFactor: 1,child: Text(name,style: TextStyle(color: ColorUtils.black11,fontSize: DimenSizeUtils.dimenSize_11),),)
-        ],
+  Widget _buildChild(BuildContext context, Widget widget, String name,int position) {
+    return GestureDetector(
+      onTap: (){
+        onGridViewItemTap(context, position);
+        ToastUtil.showToast(context, "$position $name");
+      },
+      child: SizedBox(
+        width: DimenSizeUtils.dimenSize_52,
+        height: DimenSizeUtils.dimenSize_88,
+        child: Column(
+          children: [
+            widget,
+            SizedBox(
+              height: DimenSizeUtils.dimenSize_17,
+            ),
+            Center(
+              widthFactor: 1,
+              heightFactor: 1,
+              child: Text(
+                name,
+                style: TextStyle(
+                    color: ColorUtils.black11,
+                    fontSize: DimenSizeUtils.dimenSize_11),
+              ),
+            )
+          ],
+        ),
       ),
     );
+  }
+
+  void onGridViewItemTap(BuildContext context,int position){
+    if(position == 0){
+      //农机档案
+      print("token:${Constant.tokenValue}");
+    }else if(position == 1){
+      //工作日报
+    }else if(position == 2){
+      //机手管理
+    }else if(position == 3){
+      //机具管理
+    }else if(position == 4){
+      //岗位管理
+    }else if(position == 5){
+      //农场管理
+    }else if(position == 6){
+      //电子围栏
+    }else if(position == 7){
+      //维修服务
+    }
   }
 
   //顶部沉浸式状态栏及消息icon

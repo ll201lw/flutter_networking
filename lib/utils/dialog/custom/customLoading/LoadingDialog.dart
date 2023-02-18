@@ -15,8 +15,8 @@ class LoadingDialog extends Dialog {
             color: Colors.black45,
             borderRadius:
                 BorderRadius.all(Radius.circular(DimenSizeUtils.dimenSize_5))),
-        width: DimenSizeUtils.dimenSize_60,
-        height: DimenSizeUtils.dimenSize_60,
+        width: DimenSizeUtils.dimenSize_70,
+        height: DimenSizeUtils.dimenSize_70,
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -43,7 +43,7 @@ class LoadingDialog extends Dialog {
                   style: TextStyle(
                       backgroundColor: Colors.transparent,
                       color: Colors.white,
-                      fontSize: DimenSizeUtils.sp_10,),
+                      fontSize: DimenSizeUtils.sp_11,),
                 ),
               ),
             ],

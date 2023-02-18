@@ -7,6 +7,9 @@ class HttpApi {
   static const String login =
       'api-telematics-app/v1/loginmanager/oauth/telematicsClient/token';
 
+  ///首页
+  static const String machineList = "/api-telematics-app/v1/machineryImplCombi/list";
+
   static String getPath(String url) {
     return addApp + url;
   }

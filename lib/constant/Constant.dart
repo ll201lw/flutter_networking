@@ -7,6 +7,10 @@ class Constant{
   ///测试环境
   static const String networkUrl = 'https://smart-sit.farmbgy.com';
 
+  ///websocket
+  static const String websocketBaseUrl = "wss://smart-sit.farmbgy.com";
+  static const String websocketPath = "/socket/websocket-server/ws/asset?auth-type=hx-ykdj-front";
+
   static const String code = 'status';
   static const String message = 'message';
   static const String data = 'result';
@@ -23,5 +27,10 @@ class Constant{
   static String tokenValue = '';
   static String refreshTokenValue = '';
   static String tokenLoginOutValue = '';
+
+
+  static String getWebSocketTokenString(String tokenValue){
+    return "&$token=$tokenValue";
+  }
 
 }

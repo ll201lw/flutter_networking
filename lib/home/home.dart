@@ -3,10 +3,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_networking/home/manager/ManagerPage.dart';
 import 'package:flutter_networking/utils/color/ColorUtils.dart';
 import 'package:provider/provider.dart';
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as status;
 
+import '../constant/Constant.dart';
+import '../httpapi/HttpApi.dart';
+import '../httpapi/HttpHeader.dart';
 import '../mine/MinePage.dart';
+import '../network/http/DioUtils.dart';
 import '../task/TaskPage.dart';
 import '../utils/dimensize/DimenSizeUtils.dart';
+import '../utils/toast/Toast.dart';
 import 'HomeProvider.dart';
 
 class HomePage extends StatefulWidget{
@@ -30,6 +38,8 @@ class HomeState extends State<HomePage> with RestorationMixin{
   List<BottomNavigationBarItem>? _list;
   List<BottomNavigationBarItem>? _darkList;
   int currentIndex = 0;
+
+  IOWebSocketChannel? channel;
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +75,15 @@ class HomeState extends State<HomePage> with RestorationMixin{
 
   @override
   void initState() {
+    initWebsocekt();
     super.initState();
     initPageList();
+    getMachineList();
+  }
+
+  @override
+  void didUpdateWidget(covariant HomePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -76,8 +93,9 @@ class HomeState extends State<HomePage> with RestorationMixin{
 
   @override
   void dispose() {
-    super.dispose();
     pageController?.dispose();
+    channel?.sink.close(status.goingAway);
+    super.dispose();
   }
 
 
@@ -115,7 +133,6 @@ class HomeState extends State<HomePage> with RestorationMixin{
   }
 
   @override
-  // TODO: implement restorationId
   String? get restorationId => "home";
 
   @override
@@ -123,7 +140,29 @@ class HomeState extends State<HomePage> with RestorationMixin{
     registerForRestoration(provider, "BottomNavigationBarCurrentIndex");
   }
 
+  void getMachineList(){
+    DioUtils.instacne.requestNetwork(Method.get, HttpApi.getPath(HttpApi.machineList),
+        header: HttpHeader.headers(), onSuccess: (data) {
+          print("machineList:$data");
+          // var entity = PicCodeEntity.fromJson(data as Map<String, dynamic>);
+          // setState(() {
+          //
+          // });
+        }, onError: (t, value) {
+          Toast.showToast(context, "$t $value");
+        });
+  }
 
+
+  void initWebsocekt(){
+    String deviceCode = "J101M102";
+    String websocketBaseUrl = Constant.websocketBaseUrl+Constant.websocketPath+Constant.getWebSocketTokenString(Constant.tokenValue);
+    channel = IOWebSocketChannel.connect(websocketBaseUrl);
+    channel?.stream.listen((message) {
+      print("websocket message:$message");
+    });
+    channel?.sink.add("{\"code\":10001,\"deviceId\":\"$deviceCode\"}");
+  }
 
 
 }
