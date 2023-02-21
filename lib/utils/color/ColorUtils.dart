@@ -14,4 +14,14 @@ class ColorUtils {
 
   static const Color grey66 = Color(0xFF666666);
 
+  static const Color greenea = Color(0xFFEAFFF0);
+
+
+  static const Color redffea = Color(0xFFFFEAEA);
+
+
+  static const Color blackpercent50 = Color(0x80000000);
+
+  static const Color redf64c = Color(0xFFF64C4C);
+
 }

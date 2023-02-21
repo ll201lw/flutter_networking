@@ -5,6 +5,7 @@ import 'package:flutter_networking/utils/dimensize/DimenSizeUtils.dart';
 import 'package:flutter_networking/utils/toast/ToastUtil.dart';
 
 import '../../constant/Constant.dart';
+import 'manager/MachineListPage.dart';
 
 class ManagerPage extends StatefulWidget {
   const ManagerPage({super.key});
@@ -178,7 +179,6 @@ class ManagerState extends State<ManagerPage> {
     return GestureDetector(
       onTap: (){
         onGridViewItemTap(context, position);
-        ToastUtil.showToast(context, "$position $name");
       },
       child: SizedBox(
         width: DimenSizeUtils.dimenSize_52,
@@ -208,7 +208,7 @@ class ManagerState extends State<ManagerPage> {
   void onGridViewItemTap(BuildContext context,int position){
     if(position == 0){
       //农机档案
-      print("token:${Constant.tokenValue}");
+      Navigator.push(context, MaterialPageRoute(builder: (_) => const MachineListPage()),);
     }else if(position == 1){
       //工作日报
     }else if(position == 2){

@@ -72,6 +72,12 @@ flutter:
     - image/icon_close.png
     - image/icon_eye_close.png
     - image/icon_eye_open.png
+    - image/machine/icon_signal_none.png
+    - image/machine/icon_signal_one.png
+    - image/machine/icon_signal_two.png
+    - image/machine/icon_signal_three.png
+    - image/machine/icon_signal_four.png
+    - image/machine/icon_signal_five.png
     - image/home/icon_home_select.png
     - image/home/icon_home_normal.png
     - image/home/icon_task_select.png
