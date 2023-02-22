@@ -5,7 +5,13 @@ class ImagePathUtil {
 
   static String getImagePath(String path) {
     String url = "";
-    url = Constant.networkUrl + pathTag + path;
+    if(null!=path) {
+      if(path.contains(pathTag)){
+        url = Constant.networkUrl+path;
+      }else {
+        url = Constant.networkUrl + pathTag + path;
+      }
+    }
     return url;
   }
 }

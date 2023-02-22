@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_networking/utils/color/ColorUtils.dart';
+import 'package:flutter_networking/utils/dimensize/DimenSizeUtils.dart';
 
 enum TaskMainStatus {
   FREE, //空闲
@@ -44,13 +45,15 @@ extension TaskTypeName on TaskType{
 
 class MachineItemUtil {
 
+  static double imageWidth = DimenSizeUtils.dimenSize_20;
+
   static List<Widget> list = [
-    Image.asset("image/machine/icon_signal_none.png"),
-    Image.asset("image/machine/icon_signal_one.png"),
-    Image.asset("image/machine/icon_signal_two.png"),
-    Image.asset("image/machine/icon_signal_three.png"),
-    Image.asset("image/machine/icon_signal_four.png"),
-    Image.asset("image/machine/icon_signal_five.png"),
+    Image.asset("image/machine/icon_signal_none.png",width: imageWidth,),
+    Image.asset("image/machine/icon_signal_one.png",width: imageWidth),
+    Image.asset("image/machine/icon_signal_two.png",width: imageWidth),
+    Image.asset("image/machine/icon_signal_three.png",width: imageWidth),
+    Image.asset("image/machine/icon_signal_four.png",width: imageWidth),
+    Image.asset("image/machine/icon_signal_five.png",width: imageWidth),
   ];
 
   static Color getStatusColor(int status) {

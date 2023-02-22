@@ -159,7 +159,7 @@ class HomeState extends State<HomePage> with RestorationMixin{
     String websocketBaseUrl = Constant.websocketBaseUrl+Constant.websocketPath+Constant.getWebSocketTokenString(Constant.tokenValue);
     channel = IOWebSocketChannel.connect(websocketBaseUrl);
     channel?.stream.listen((message) {
-      print("websocket message:$message");
+      // print("websocket message:$message");
     });
     channel?.sink.add("{\"code\":10001,\"deviceId\":\"$deviceCode\"}");
   }

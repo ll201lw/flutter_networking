@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_networking/constant/Constant.dart';
 import 'package:flutter_networking/httpapi/HttpApi.dart';
@@ -361,7 +362,7 @@ void login(BuildContext context, String username, String password, String code,
     //关闭加载框
     DialogUtil.dismiss(context);
     //跳转到主页
-    pushMain(context);
+    pushMain(context,const HomePage());
   }, onError: (code, message) {
     DialogUtil.dismiss(context);
     Toast.showToast(context, message);
@@ -369,10 +370,10 @@ void login(BuildContext context, String username, String password, String code,
 }
 
 ///跳转到首页
-void pushMain(BuildContext context) {
+void pushMain(BuildContext context,Widget widget) {
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (_) => const HomePage()),
+    CupertinoPageRoute(builder: (_) => widget),
   );
 }
 

@@ -208,7 +208,8 @@ class ManagerState extends State<ManagerPage> {
   void onGridViewItemTap(BuildContext context,int position){
     if(position == 0){
       //农机档案
-      Navigator.push(context, MaterialPageRoute(builder: (_) => const MachineListPage()),);
+      // CupertinoPageRoute
+      Navigator.push(context, CupertinoPageRoute(builder: (_) => const MachineListPage()),);
     }else if(position == 1){
       //工作日报
     }else if(position == 2){

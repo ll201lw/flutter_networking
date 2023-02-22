@@ -57,6 +57,8 @@ dev_dependencies:
   encrypt: ^5.0.1
   shared_preferences: ^2.0.15
 
+
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -70,6 +72,7 @@ flutter:
 
   assets:
     - image/icon_close.png
+    - image/ic_launcher.png
     - image/icon_eye_close.png
     - image/icon_eye_open.png
     - image/machine/icon_signal_none.png

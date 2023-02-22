@@ -20,11 +20,22 @@ class MachineListPage extends StatefulWidget {
 
 class MachineListState extends State<MachineListPage> {
   List<MachineEntity> itemList = [];
+  // late EasyRefreshController _controller;
 
   @override
   void initState() {
     getMachineList();
     super.initState();
+    // _controller = EasyRefreshController(
+    //   controlFinishRefresh: true,
+    //   controlFinishLoad: true,
+    // );
+  }
+
+  @override
+  void dispose() {
+    // _controller?.dispose();
+    super.dispose();
   }
 
   @override
@@ -37,10 +48,10 @@ class MachineListState extends State<MachineListPage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         backgroundColor: Colors.white,
-        title: Text(
+        title: Center(child: Text(
           "农机列表",
           style: TextStyle(color: Colors.black, fontSize: DimenSizeUtils.sp_15),
-        ),
+        ),),
       ),
       body: buildGridView(context, itemList),
     );
@@ -84,26 +95,31 @@ List<Widget> _buildGridViewChild(
   List<Widget> list = [];
   for (int i = 0; i < itemList.length; i++) {
     MachineEntity item = itemList.elementAt(i);
-    String image = ImagePathUtil.getImagePath(item.image!!);
-    String status = MachineItemUtil.getStatus(item.terminalStatus!!);
-    String taskType = item.taskFeild??=""+"田块"+MachineItemUtil.getTaskType(item.taskType??=0);
-    Color color = MachineItemUtil.getStatusColor(item.terminalStatus!!);
-    String taskStatusString = MachineItemUtil.getTaskStatus(item.taskStatus!!);
-    int taskStatus = item.taskStatus??=0;
-    Color taskColor = MachineItemUtil.getTaskStatusColor(item.taskStatus!!);
+    int taskStatus = item.taskStatus ??= 0;
+    int onlineStatus = item.terminalStatus ??= 0;
+    int signal = item.signal ??= -1;
+    String image = item.image==null||""==item.image?"":ImagePathUtil.getImagePath(item.image!!);
+    String status = MachineItemUtil.getStatus(onlineStatus);
+    String taskType = item.taskFeild ??=
+        "" + "田块" + MachineItemUtil.getTaskType(item.taskType ??= 0);
+    Color color = MachineItemUtil.getStatusColor(onlineStatus);
+    String taskStatusString = MachineItemUtil.getTaskStatus(taskStatus);
+    Color taskColor = MachineItemUtil.getTaskStatusColor(taskStatus);
     String machineName = item.machineryName!!;
-    Color taskTypeBackgroundColor = MachineItemUtil.getTaskTypeBackgroundColor(taskStatus);
+    Color taskTypeBackgroundColor =
+        MachineItemUtil.getTaskTypeBackgroundColor(taskStatus);
     Color taskTypeColor = MachineItemUtil.getTaskTypeColor(taskStatus);
-    String taskTypeName = MachineItemUtil.getTaskTypeName(item.combinationTypeName??="", item.implementsName??="");
-    Widget widget =
-        _buildGridViewItem(context, image, status, color,taskType, machineName,taskStatus,taskTypeBackgroundColor,taskTypeColor,taskStatusString,taskColor,taskTypeName);
+    String taskTypeName = MachineItemUtil.getTaskTypeName(
+        item.combinationTypeName ??= "", item.implementsName ??= "");
+    Widget widget = _buildGridViewItem(context, image, status, color, taskType, machineName, taskStatus, onlineStatus,
+        taskTypeBackgroundColor, taskTypeColor, taskStatusString, taskColor, taskTypeName, signal);
     list.add(widget);
   }
   return list;
 }
 
-Widget _buildGridViewItem(BuildContext context, String url, String status,
-    Color color,String taskType, String machineName,int taskStatus,Color taskTypeBackgroundColor,Color taskTypeColor,String taskStatusString,Color taskColor,String taskTypeName) {
+Widget _buildGridViewItem(BuildContext context, String url, String status, Color color, String taskType, String machineName, int taskStatus, int onlineStatus,
+    Color taskTypeBackgroundColor, Color taskTypeColor, String taskStatusString, Color taskColor, String taskTypeName, int singal) {
   return ClipRRect(
     borderRadius: BorderRadius.all(Radius.circular(DimenSizeUtils.dimenSize_8)),
     child: Container(
@@ -112,17 +128,24 @@ Widget _buildGridViewItem(BuildContext context, String url, String status,
       height: DimenSizeUtils.dimenSize_175,
       child: Column(
         children: [
-          _buildMachinePic(context, url, status,taskStatus,taskTypeBackgroundColor,taskTypeColor, color, taskType),
-          _buildMachineName(context, machineName, taskStatusString,taskColor),
+          _buildMachinePic(context, url, status, taskStatus, onlineStatus,
+              taskTypeBackgroundColor, taskTypeColor, color, taskType, singal),
+          _buildMachineName(context, machineName, taskStatusString, taskColor),
           _buildMachineTaskType(context, taskTypeName)
         ],
       ),
     ),
   );
 }
+Widget _buildImage(String image){
+  if("" == image || '' == image){
+    return Image.asset("image/ic_launcher.png",fit: BoxFit.fill,width: double.infinity,height: double.infinity,);
+  }
+  return Image.network(image, fit: BoxFit.fill,width: double.infinity, height: DimenSizeUtils.dimenSize_110,);
+}
 
-Widget _buildMachinePic(BuildContext context, String url, String status,int taskStatus,Color taskTypeBackgroundColor,Color taskTypeColor,
-    Color color, String taskType){
+Widget _buildMachinePic(BuildContext context, String url, String status, int taskStatus, int onlineStatus,
+    Color taskTypeBackgroundColor, Color taskTypeColor, Color color, String taskType, int signal) {
   return Container(
     width: double.infinity,
     height: DimenSizeUtils.dimenSize_110,
@@ -136,11 +159,7 @@ Widget _buildMachinePic(BuildContext context, String url, String status,int task
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(DimenSizeUtils.dimenSize_8),
               topRight: Radius.circular(DimenSizeUtils.dimenSize_8)),
-          child: Image.network(
-            url,
-            fit: BoxFit.fitHeight,
-            height: DimenSizeUtils.dimenSize_110,
-          ),
+          child: _buildImage(url),
         ),
         Positioned(
             right: 0,
@@ -148,19 +167,14 @@ Widget _buildMachinePic(BuildContext context, String url, String status,int task
             child: ClipRRect(
               borderRadius: BorderRadius.only(
                   topRight: Radius.circular(DimenSizeUtils.dimenSize_8),
-                  bottomLeft:
-                  Radius.circular(DimenSizeUtils.dimenSize_8)),
+                  bottomLeft: Radius.circular(DimenSizeUtils.dimenSize_8)),
               child: Container(
                 width: DimenSizeUtils.dimenSize_44,
                 height: DimenSizeUtils.dimenSize_27,
                 color: color,
                 child: Center(
-                  child: Text(
-                    status,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: DimenSizeUtils.sp_12),
-                  ),
+                  child: _buildTaskStatusWidget(
+                      context, taskStatus, onlineStatus, status, signal),
                 ),
               ),
             )),
@@ -177,8 +191,7 @@ Widget _buildMachinePic(BuildContext context, String url, String status,int task
                     child: Text(
                       taskType,
                       style: TextStyle(
-                          color: taskTypeColor,
-                          fontSize: DimenSizeUtils.sp_13),
+                          color: taskTypeColor, fontSize: DimenSizeUtils.sp_13),
                     )),
               ],
             ))
@@ -187,20 +200,24 @@ Widget _buildMachinePic(BuildContext context, String url, String status,int task
   );
 }
 
-Widget _buildTaskStatusWidget(BuildContext context,int taskStatus,int status,String statusString,int signal){
-  if(MachineItemUtil.isOnline(status)){
+Widget _buildTaskStatusWidget(BuildContext context, int taskStatus, int status,
+    String statusString, int signal) {
+  if (MachineItemUtil.isOnline(status)) {
     return MachineItemUtil.getSignalWidget(signal);
-  }else{
-    return Text(
-      statusString,
-      style: TextStyle(
-          color: ColorUtils.redf64c,
-          fontSize: DimenSizeUtils.sp_12),
-    );
+  } else {
+    return _buildTaskStatusText(statusString);
   }
 }
 
-Widget _buildMachineName(BuildContext context,String machineName,String taskStatus,Color taskColor){
+Widget _buildTaskStatusText(String statusString) {
+  return Text(
+    statusString,
+    style: TextStyle(color: ColorUtils.redf64c, fontSize: DimenSizeUtils.sp_12),
+  );
+}
+
+Widget _buildMachineName(BuildContext context, String machineName,
+    String taskStatus, Color taskColor) {
   return Container(
     margin: EdgeInsets.zero,
     height: DimenSizeUtils.dimenSize_30,
@@ -212,24 +229,22 @@ Widget _buildMachineName(BuildContext context,String machineName,String taskStat
             child: Text(
               machineName,
               style: TextStyle(
-                  color: Colors.black,
-                  fontSize: DimenSizeUtils.sp_13),
+                  color: Colors.black, fontSize: DimenSizeUtils.sp_13),
             )),
         Positioned(
             right: DimenSizeUtils.dimenSize_10,
             top: DimenSizeUtils.dimenSize_11,
             child: Text(
               taskStatus,
-              style: TextStyle(
-                  color: taskColor,
-                  fontSize: DimenSizeUtils.sp_11),
+              style:
+                  TextStyle(color: taskColor, fontSize: DimenSizeUtils.sp_11),
             ))
       ],
     ),
   );
 }
 
-Widget _buildMachineTaskType(BuildContext context,String taskTypeName){
+Widget _buildMachineTaskType(BuildContext context, String taskTypeName) {
   return Container(
     margin: EdgeInsets.zero,
     height: DimenSizeUtils.dimenSize_23,
@@ -241,8 +256,7 @@ Widget _buildMachineTaskType(BuildContext context,String taskTypeName){
             child: Text(
               taskTypeName,
               style: TextStyle(
-                  color: ColorUtils.grey66,
-                  fontSize: DimenSizeUtils.sp_11),
+                  color: ColorUtils.grey66, fontSize: DimenSizeUtils.sp_11),
             )),
       ],
     ),
