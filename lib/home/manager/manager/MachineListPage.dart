@@ -1,3 +1,4 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_networking/home/entity/manager/MachineEntity.dart';
@@ -20,21 +21,21 @@ class MachineListPage extends StatefulWidget {
 
 class MachineListState extends State<MachineListPage> {
   List<MachineEntity> itemList = [];
-  // late EasyRefreshController _controller;
+  late EasyRefreshController controller;
 
   @override
   void initState() {
     getMachineList();
     super.initState();
-    // _controller = EasyRefreshController(
-    //   controlFinishRefresh: true,
-    //   controlFinishLoad: true,
-    // );
+    controller = EasyRefreshController(
+      controlFinishRefresh: true,
+      controlFinishLoad: false,
+    );
   }
 
   @override
   void dispose() {
-    // _controller?.dispose();
+    controller?.dispose();
     super.dispose();
   }
 
@@ -53,7 +54,14 @@ class MachineListState extends State<MachineListPage> {
           style: TextStyle(color: Colors.black, fontSize: DimenSizeUtils.sp_15),
         ),),
       ),
-      body: buildGridView(context, itemList),
+      body: EasyRefresh(
+        controller: controller,
+        header: const TaurusHeader(skyColor: ColorUtils.greenf3),
+        onRefresh: (){
+          getMachineList();
+        },
+        child: buildGridView(context, itemList),
+      ),
     );
   }
 
@@ -71,10 +79,16 @@ class MachineListState extends State<MachineListPage> {
           }
         });
       }
+      finishRefresh(controller);
     }, onError: (t, value) {
       Toast.showToast(context, "$t $value");
+      finishRefresh(controller);
     });
   }
+}
+
+void finishRefresh(EasyRefreshController controller){
+  controller?.finishRefresh();
 }
 
 Widget buildGridView(BuildContext context, List<MachineEntity> itemList) {

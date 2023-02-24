@@ -68,11 +68,36 @@ class LoginState extends State<LoginWidget> {
   );
 
   @override
-  Widget build(BuildContext context) {
-    if(mounted){
-      acountController?.text = acountText;
-      passwordController?.text = passwordText;
+  void initState() {
+    Future.value(() {
+      SPUtils.init();
+    });
+    acountController.addListener(isEmpty);
+    acountController?.text = acountText;
+    passwordController?.text = passwordText;
+    super.initState();
+    StatusBarUtils.setMainStyle();
+    changeCodeImage(context, setState);
+  }
+
+  void isEmpty() {
+    bool preShow = showClearButton;
+    bool isNotEmpty = acountController.text.isNotEmpty;
+    if (preShow != isNotEmpty) {
+      setState(() {
+        showClearButton = acountController.text.isNotEmpty;
+      });
     }
+  }
+
+  @override
+  void dispose() {
+    acountController?.removeListener(isEmpty);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       key: UniqueKey(),
       resizeToAvoidBottomInset: false,
@@ -125,8 +150,8 @@ class LoginState extends State<LoginWidget> {
                   DimenSizeUtils.dimenSize_30,
                   DimenSizeUtils.getHeightDimens(0)),
               child: TextField(
+                key: UniqueKey(),
                 controller: acountController,
-                clipBehavior: Clip.none,
                 decoration: InputDecoration(
                     hintText: '请输入用户名',
                     hintStyle: TextStyle(fontSize: DimenSizeUtils.sp_15),
@@ -138,26 +163,16 @@ class LoginState extends State<LoginWidget> {
                         ? IconButton(
                             padding: EdgeInsets.fromLTRB(
                                 DimenSizeUtils.dimenSize_5,
-                                0,
-                                0,
+                                0, 0,
                                 DimenSizeUtils.dimenSize_13),
                             icon: iconClearText,
                             onPressed: () {
-                              acountController.clear();
-                              showClearButton =
-                                  acountController.text.isNotEmpty;
-                              setState(() {});
+                              acountController.text = "";
                             },
                           )
                         : null),
                 style: TextStyle(
                     fontSize: DimenSizeUtils.sp_15, color: Colors.black),
-                onChanged: (text) {
-                  acountText = text;
-                  showClearButton =
-                      acountController.text.isNotEmpty ? true : false;
-                  setState(() {});
-                },
               ),
             ),
             SizedBox(
@@ -306,15 +321,7 @@ class LoginState extends State<LoginWidget> {
     );
   }
 
-  @override
-  void initState() {
-    Future.value(() {
-      SPUtils.init();
-    });
-    super.initState();
-    StatusBarUtils.setMainStyle();
-    changeCodeImage(context, setState);
-  }
+
 }
 
 Widget getImage(BuildContext context, PicCodeEntity entity) {
@@ -362,7 +369,7 @@ void login(BuildContext context, String username, String password, String code,
     //关闭加载框
     DialogUtil.dismiss(context);
     //跳转到主页
-    pushMain(context,const HomePage());
+    pushMain(context, const HomePage());
   }, onError: (code, message) {
     DialogUtil.dismiss(context);
     Toast.showToast(context, message);
@@ -370,7 +377,7 @@ void login(BuildContext context, String username, String password, String code,
 }
 
 ///跳转到首页
-void pushMain(BuildContext context,Widget widget) {
+void pushMain(BuildContext context, Widget widget) {
   Navigator.push(
     context,
     CupertinoPageRoute(builder: (_) => widget),
